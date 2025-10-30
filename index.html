@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pencilsmith</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text x='50' y='75' font-size='80' text-anchor='middle' fill='%23222' font-family='serif'>P</text></svg>">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Castoro:ital@0;1&display=swap" rel="stylesheet">
+
+    <!-- Stylesheet -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Castoro', serif;
+            font-size: 24px;
+            line-height: 36px;
+            font-weight: 400;
+            background-color: #fafafa;
+            color: #222;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 16.67%;
+        }
+
+        .title {
+            font-size: 24px;
+            line-height: 36px;
+            font-weight: 400;
+        }
+
+        .empty-line {
+            height: 36px;
+        }
+
+        .links {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .link {
+            color: #222;
+            text-decoration: none;
+            transition: opacity 0.2s ease;
+            display: inline-block;
+        }
+
+        .link:hover {
+            opacity: 0.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Pencilsmith</h1>
+        <p class="subtitle">Simplest tools with zero intelligence</p>
+        <div class="empty-line"></div>
+        <nav class="links">
+            <a href="#" class="link">- Lift</a>
+            <a href="#" class="link">- Dumbpage</a>
+        </nav>
+    </div>
+</body>
+</html>
