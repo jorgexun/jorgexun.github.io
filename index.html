@@ -6,12 +6,10 @@
     <title>Pencilsmith</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text x='50' y='75' font-size='80' text-anchor='middle' fill='%23222' font-family='serif'>P</text></svg>">
 
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lustria&display=swap" rel="stylesheet">
 
-    <!-- Stylesheet -->
     <style>
         * {
             margin: 0;
@@ -19,62 +17,42 @@
             box-sizing: border-box;
         }
 
+        html,
         body {
-            font-family: 'Lustria', serif;
-            font-size: 22px;
-            line-height: 36px;
-            font-weight: 400;
-            background-color: #fafafa;
-            color: #000;
-            height: 100vh;
+            width: 100%;
+            min-height: 100%;
+        }
+
+        body {
+            position: relative;
+            min-height: 100svh;
+            overflow: hidden;
             display: flex;
             align-items: center;
             padding: 30px 8%;
-        }
-
-        .title {
-            font-size: 36px;
-            line-height: 42px;
-            font-weight: 400;
-        }
-
-        .empty-line {
-            height: 36px;
-        }
-
-        .links {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .link {
-            color: #000;
-            text-decoration: none;
-            transition: opacity 0.2s ease;
-            display: inline-block;
-        }
-
-        .link:hover {
-            opacity: 0.6;
+            isolation: isolate;
+            color: #171713;
+            background-color: #fafafa;
+            font-family: 'Lustria', serif;
         }
 
         .container {
-            max-width: 960px;
             width: 100%;
+            max-width: 960px;
             margin: auto;
         }
+
+        .title {
+            font-size: clamp(36px, 5vw, 64px);
+            line-height: 1;
+            font-weight: 400;
+        }
+
     </style>
 </head>
 <body>
-    <div class="container">
+    <main class="container">
         <h1 class="title">Pencilsmith</h1>
-        <p class="subtitle">Tiny tools with zero intelligence</p>
-        <div class="empty-line"></div>
-        <nav class="links">
-            <a href="#" class="link">- Lift (macOS app)</a>
-            <a href="#" class="link">- Dumbpage (Chrome extension)</a>
-        </nav>
-    </div>
+    </main>
 </body>
 </html>
