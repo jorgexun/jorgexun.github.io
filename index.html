@@ -102,50 +102,28 @@
             const background = document.querySelector(".background");
             const canvas = background.querySelector("canvas");
 
-            // One User Apps: O, U and A drawn as a circle, a semicircle and
-            // a triangle. x, y are viewport fractions; r and drift are
-            // fractions of viewport height. sx / sy / sr are angular speeds
-            // in rad/s; rot is the resting tilt in radians.
+            // One User Apps: O, U and A drawn as a circle, a U (rectangle
+            // on a semicircle) and a triangle. x, y are viewport fractions;
+            // r and drift are fractions of viewport height. sx / sy / sr are
+            // angular speeds in rad/s; rot is the resting tilt in radians.
             const shapes = [
                 { kind: "circle", rot: 0.00,
-                  x: 0.28, y: 0.25, r: 0.55, depth: 0.6,
+                  x: 0.22, y: 0.32, r: 0.42, depth: 0.6,
                   drift: 0.055, sx: 0.14, sy: 0.11, sr: 0.09, phase: 0.0 },
-                { kind: "triangle", rot: 0.25,
-                  x: 0.75, y: 0.35, r: 0.65, depth: 0.85,
-                  drift: 0.065, sx: 0.12, sy: 0.15, sr: 0.11, phase: 1.7 },
-                { kind: "semicircle", rot: -0.20,
-                  x: 0.35, y: 0.80, r: 0.60, depth: 0.45,
+                { kind: "u", rot: -0.15,
+                  x: 0.52, y: 0.66, r: 0.42, depth: 0.85,
                   drift: 0.060, sx: 0.10, sy: 0.13, sr: 0.08, phase: 3.1 },
-                { kind: "circle", rot: 0.00,
-                  x: 0.82, y: 0.78, r: 0.48, depth: 1.2,
-                  drift: 0.075, sx: 0.16, sy: 0.12, sr: 0.10, phase: 5.6 },
-                { kind: "triangle", rot: -0.30,
-                  x: 0.52, y: 0.55, r: 0.22, depth: 1.0,
-                  drift: 0.070, sx: 0.15, sy: 0.14, sr: 0.12, phase: 4.2 },
-                { kind: "semicircle", rot: 0.35,
-                  x: 0.10, y: 0.58, r: 0.38, depth: 0.7,
-                  drift: 0.062, sx: 0.11, sy: 0.16, sr: 0.10, phase: 2.3 },
-                { kind: "semicircle", rot: 0.15,
-                  x: 0.62, y: 0.12, r: 0.30, depth: 1.1,
-                  drift: 0.068, sx: 0.17, sy: 0.10, sr: 0.13, phase: 0.8 },
-                { kind: "circle", rot: 0.00,
-                  x: 0.95, y: 0.52, r: 0.34, depth: 0.9,
-                  drift: 0.058, sx: 0.13, sy: 0.17, sr: 0.11, phase: 5.1 },
                 { kind: "triangle", rot: 0.20,
-                  x: 0.48, y: 0.95, r: 0.26, depth: 1.3,
-                  drift: 0.072, sx: 0.18, sy: 0.11, sr: 0.14, phase: 1.2 },
-                { kind: "triangle", rot: -0.15,
-                  x: 0.18, y: 0.05, r: 0.32, depth: 0.8,
-                  drift: 0.064, sx: 0.12, sy: 0.18, sr: 0.09, phase: 3.7 },
-                { kind: "semicircle", rot: -0.30,
-                  x: 0.90, y: 0.05, r: 0.24, depth: 1.15,
-                  drift: 0.070, sx: 0.19, sy: 0.13, sr: 0.15, phase: 6.0 },
-                { kind: "circle", rot: 0.00,
-                  x: 0.05, y: 0.92, r: 0.28, depth: 0.95,
-                  drift: 0.066, sx: 0.14, sy: 0.15, sr: 0.12, phase: 2.8 }
+                  x: 0.80, y: 0.36, r: 0.42, depth: 1.1,
+                  drift: 0.065, sx: 0.12, sy: 0.15, sr: 0.11, phase: 1.7 }
             ];
             const shapeCount = shapes.length;
-            const kindIds = { circle: 0, semicircle: 1, triangle: 2 };
+            const kindIds = { circle: 0, u: 1, triangle: 2 };
+            // Relative to a shape's size r: the U's straight sides, the
+            // triangle's half side and the corner rounding.
+            const uSide = 1.3;
+            const triangleHalf = 0.95;
+            const cornerRadius = 0.14;
             const inkColor = "rgba(31, 31, 26, 0.12)";
 
             const gl = canvas.getContext("webgl2", {
@@ -192,17 +170,33 @@
                         return mix(b, a, h) - k * h * (1.0 - h);
                     }
 
-                    // Half-disk with its flat edge on top, centred on
-                    // its bounding box so it rotates about its middle.
-                    float sdSemicircle(vec2 p, float r) {
-                        p.y -= 0.5 * r;
+                    const float U_SIDE = ${uSide.toFixed(3)};
+                    const float TRIANGLE_HALF = ${triangleHalf.toFixed(3)};
+                    const float CORNER = ${cornerRadius.toFixed(3)};
+
+                    // Sharp U: sides at |x| = r up to y = top, closed
+                    // below by a semicircle centred at (0, c).
+                    float sdSharpU(vec2 p, float r, float top, float c) {
                         p.x = abs(p.x);
 
-                        if (p.y > 0.0) {
-                            return length(vec2(p.x - min(p.x, r), p.y));
+                        if (p.y > top) {
+                            return length(vec2(max(p.x - r, 0.0), p.y - top));
                         }
 
-                        return max(length(p) - r, p.y);
+                        if (p.y >= c) {
+                            return max(p.x - r, p.y - top);
+                        }
+
+                        return max(length(p - vec2(0.0, c)) - r, p.y - top);
+                    }
+
+                    // U centred on its bounding box, with its top corners
+                    // rounded by shrinking the shape and growing it back.
+                    float sdU(vec2 p, float r) {
+                        float k = CORNER * r;
+                        float top = 0.5 * (1.0 + U_SIDE) * r;
+                        float c = top - U_SIDE * r;
+                        return sdSharpU(p, r - k, top - k, c) - k;
                     }
 
                     // Point-up equilateral triangle centred on its
@@ -222,11 +216,16 @@
 
                     float sdShape(int kind, vec2 p, float r) {
                         if (kind == 1) {
-                            return sdSemicircle(p, r);
+                            return sdU(p, r);
                         }
 
                         if (kind == 2) {
-                            return sdTriangle(p, r * 0.9);
+                            // Inset so the rounded edges stay in place.
+                            float k = CORNER * r;
+                            return sdTriangle(
+                                p,
+                                TRIANGLE_HALF * r - k * sqrt(3.0)
+                            ) - k;
                         }
 
                         return length(p) - r;
@@ -456,15 +455,24 @@
                         fallback.rotate(-state.angle);
                         fallback.beginPath();
 
-                        if (state.kind === "semicircle") {
-                            fallback.arc(0, -r / 2, r, 0, Math.PI);
+                        const corner = cornerRadius * r;
+
+                        if (state.kind === "u") {
+                            const top = -0.5 * (1 + uSide) * r;
+                            const arcY = top + uSide * r;
+                            fallback.moveTo(0, top);
+                            fallback.arcTo(r, top, r, arcY, corner);
+                            fallback.lineTo(r, arcY);
+                            fallback.arc(0, arcY, r, 0, Math.PI);
+                            fallback.arcTo(-r, top, 0, top, corner);
                             fallback.closePath();
                         } else if (state.kind === "triangle") {
-                            const half = r * 0.9;
+                            const half = triangleHalf * r;
                             const apex = half * 2 / Math.sqrt(3);
-                            fallback.moveTo(0, -apex);
-                            fallback.lineTo(half, apex / 2);
-                            fallback.lineTo(-half, apex / 2);
+                            fallback.moveTo(0, apex / 2);
+                            fallback.arcTo(half, apex / 2, 0, -apex, corner);
+                            fallback.arcTo(0, -apex, -half, apex / 2, corner);
+                            fallback.arcTo(-half, apex / 2, 0, apex / 2, corner);
                             fallback.closePath();
                         } else {
                             fallback.arc(0, 0, r, 0, 2 * Math.PI);
