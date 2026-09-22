@@ -7,7 +7,7 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='%23222'><circle cx='26' cy='26' r='22'/><path d='M55.5 9.5a3.7 3.7 0 0 1 3.7-3.7h31.6a3.7 3.7 0 0 1 3.7 3.7v17.3a19.5 19.5 0 0 1-39 0z'/><polygon points='26,61 42.8,90 9.2,90' stroke='%23222' stroke-width='6' stroke-linejoin='round'/></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300..600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300..600&family=Urbanist:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
 
     <style>
         * {
@@ -77,10 +77,12 @@
         }
 
         p {
-            /* Optical alignment: the small "S" needs a nudge right to sit
+            /* Optical alignment: the small "F" needs a nudge right to sit
                flush with the round "O" above it. */
             margin: 6px 0 0 0.18em;
             color: #6f6f69;
+            /* Outfit has no italic; Urbanist is a close match that does. */
+            font-family: "Urbanist", "Outfit", sans-serif;
             font-size: clamp(12px, 1.3vw, 15px);
             line-height: 1.5;
             letter-spacing: 0.075em;
@@ -94,7 +96,7 @@
 
     <main>
         <h1>OneUserApps</h1>
-        <p>Somewhere between minimal and zero</p>
+        <p>For the user, not <em>the users</em></p>
     </main>
 
     <script>
