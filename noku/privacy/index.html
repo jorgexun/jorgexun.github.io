@@ -46,8 +46,18 @@
             letter-spacing: 0.075em;
         }
 
-        .eyebrow a {
+        a {
             color: inherit;
+            text-decoration: underline;
+            text-decoration-color: rgba(23, 23, 19, 0.3);
+            text-underline-offset: 3px;
+        }
+
+        a:hover {
+            text-decoration-color: currentColor;
+        }
+
+        .eyebrow a {
             text-decoration: none;
         }
 
@@ -139,7 +149,7 @@
         <p>If this policy ever changes, the new version will be posted on this page with a new date.</p>
 
         <h2>Contact</h2>
-        <p>For questions about this policy, contact the developer through Noku’s page on the App Store.</p>
+        <p>For questions about this policy, see <a href="/noku/">Noku Support</a>.</p>
 
         <footer>Last updated November 6, 2026</footer>
     </main>
